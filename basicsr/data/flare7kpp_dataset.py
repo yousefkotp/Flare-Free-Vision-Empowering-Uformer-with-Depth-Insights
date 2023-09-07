@@ -163,7 +163,8 @@ class Flare_Image_Loader(data.Dataset):
 		#flare blur
 		blur_transform=transforms.GaussianBlur(21,sigma=(0.1,3.0))
 		flare_img=blur_transform(flare_img)
-		#flare_img=flare_img+flare_DC_offset
+		flare_img=torch.clamp(flare_img,min=0,max=1)
+		flare_img=flare_img+flare_DC_offset
 		flare_img=torch.clamp(flare_img,min=0,max=1)
 
 		#merge image	
@@ -174,39 +175,8 @@ class Flare_Image_Loader(data.Dataset):
 			base_img=torch.clamp(base_img,min=0,max=1)
 			flare_img=flare_img-light_img
 			flare_img=torch.clamp(flare_img,min=0,max=1)
-		if self.mask_type==None:
-			return {'gt': adjust_gamma_reverse(base_img),'flare': adjust_gamma_reverse(flare_img),'lq': adjust_gamma_reverse(merge_img),'gamma':gamma}
-		elif self.mask_type=="luminance":
-			#calculate mask (the mask is 3 channel)
-			one = torch.ones_like(base_img)
-			zero = torch.zeros_like(base_img)
-
-			luminance=0.3*flare_img[0]+0.59*flare_img[1]+0.11*flare_img[2]
-			threshold_value=0.99**gamma
-			flare_mask=torch.where(luminance >threshold_value, one, zero)
-
-		elif self.mask_type=="color":
-			one = torch.ones_like(base_img)
-			zero = torch.zeros_like(base_img)
-
-			threshold_value=0.99**gamma
-			flare_mask=torch.where(merge_img >threshold_value, one, zero)
-		elif self.mask_type=="flare":
-			one = torch.ones_like(base_img)
-			zero = torch.zeros_like(base_img)
-
-			threshold_value=0.7**gamma
-			flare_mask=torch.where(flare_img >threshold_value, one, zero)
-		elif self.mask_type=="light":
-			# Depreciated: we dont need light mask anymore
-			one = torch.ones_like(base_img)
-			zero = torch.zeros_like(base_img)
-
-			luminance=0.3*light_img[0]+0.59*light_img[1]+0.11*light_img[2]
-			threshold_value=0.01
-			flare_mask=torch.where(luminance >threshold_value, one, zero)
-		return {'gt': adjust_gamma_reverse(base_img),'flare': adjust_gamma_reverse(flare_img),'lq': adjust_gamma_reverse(merge_img),'mask': flare_mask,'gamma': gamma}
-
+		return {'gt': adjust_gamma_reverse(base_img),'flare': adjust_gamma_reverse(flare_img),'lq': adjust_gamma_reverse(merge_img),'gamma':gamma}
+		
 	def __len__(self):
 		return len(self.data_list)
 	
