@@ -1,8 +1,12 @@
+# GENERATE TIME: Tue Aug  8 18:55:51 2023
+# CMD:
+# basicsr/train.py -opt options/uformer_flare7kpp_baseline_option.yml --auto_resume
+
 # general settings
 name: Uformer_flare7kpp_baseline_option.yml
 model_type: DeflareModel
 scale: 1
-num_gpu: 2  # set num_gpu: 0 for cpu mode
+num_gpu: 1  # set num_gpu: 0 for cpu mode
 manual_seed: 0
 
 # dataset and data loader settings
@@ -15,7 +19,7 @@ datasets:
       Flare7k_scattering: dataset/Flare7Kpp/Flare7K/Scattering_Flare/Compound_Flare
       Real_scattering1: dataset/Flare7Kpp/Flare-R/Compound_Flare
     reflective_dict: 
-      Flare7k_reflective: dataset/Flare7Kpp/Flare7K/Reflective_Flare
+      Flare7k_reflective: ~
       Real_reflective1: ~
     light_dict:
       Flare7k_light: dataset/Flare7Kpp/Flare7K/Scattering_Flare/Light_Source
@@ -29,14 +33,15 @@ datasets:
       translate: 100
       shear: 20
     mask_type: ~
-
+    pin_memory: True
+    
     
     # data loader
     use_shuffle: true
-    num_worker_per_gpu: 4
-    batch_size_per_gpu: 2
+    num_worker_per_gpu: 2 # 4 causes freezing sometimes
+    batch_size_per_gpu: 1
     dataset_enlarge_ratio: 1
-    prefetch_mode: ~
+    prefetch_mode: cuda
 
   val:
     name: flare_test
@@ -49,7 +54,7 @@ datasets:
 network_g:
   type: Uformer
   img_size: 512
-  img_ch: 3
+  img_ch: 4
   output_ch: 6
   multi_stage: 1
 
@@ -69,7 +74,7 @@ train:
 
   scheduler:
     type: MultiStepLR
-    milestones: [200000]
+    milestones: [400000] 
     gamma: 0.5
 
   out_deflare: True
@@ -88,8 +93,8 @@ train:
 
 # validation settings
 val:
-  val_freq: !!float 5e3
-  save_img: true
+  val_freq: 500 
+  save_img: false
 
   metrics:
     psnr: # metric name, can be arbitrary
@@ -104,7 +109,7 @@ val:
 # logging settings
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 5e3
+  save_checkpoint_freq: 500
   use_tb_logger: true
   wandb:
     project: ~
