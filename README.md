@@ -99,7 +99,7 @@ CUDA_VISIBLE_DEVICES=0,1 bash scripts/dist_train.sh 2 options/uformer_flare7kpp_
 ## Testing
 
 ### Saved Checkpoint
-We have uploaded our trained model on [Google Drive](https://drive.google.com/file/d/1rQ2ZG3HHoBOogYw_qnH3SgLlNlsQtPST/view?usp=sharing). To use it, you can download it and put it in `experiments/flare7kpp/pretrained.pth`.
+We have uploaded our trained model on [Google Drive](https://drive.google.com/file/d/1-EtTkQUM4DftOdnxqovYtAjz3paAWaFN/view?usp=sharing). To use it, you can download it and put it in `experiments/flare7kpp/pretrained.pth`.
 
 ### Inference
 To start inference on test dataset, you can run the following command:
