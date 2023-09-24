@@ -116,7 +116,7 @@ python evaluate.py --input result/real/pretrained/blend/ --gt dataset/Flare7Kpp/
 ```
 
 ## License
-This project is governed by the S-Lab License 1.0. If you intend to redistribute or utilize the dataset and code for non-commercial purposes, it is imperative to adhere to the terms outlined in this license
+This project is governed by the S-Lab License 1.0. If you intend to redistribute or utilize the code for non-commercial purposes, it is imperative to adhere to the terms outlined in this license
 
 ## Acknowledgement
 This work borrows heavily from [Flare7K++: Mixing Synthetic and Real Datasets for Nighttime Flare Removal and Beyond](https://github.com/ykdai/Flare7K). We would like to thank the authors for their work.
